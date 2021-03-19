@@ -23,7 +23,7 @@ class Evaluate():
     def evaluateRankingPerformance(self, evaluate_index_dict, evaluate_real_rating_matrix, \
         evaluate_predict_rating_matrix, topK, num_procs, exp_flag=0, sp_name=None, result_file=None):
         user_list = list(evaluate_index_dict.keys())
-        batch_size = len(user_list) / num_procs
+        batch_size = int(len(user_list) // num_procs)
 
         hr_list, ndcg_list = [], []
         index = 0
@@ -81,7 +81,7 @@ class Evaluate():
     def evaluateRankingPerformance_sparsity(self, evaluate_index_dict, social_sparsity_dict, interest_sparsity_dict, evaluate_real_rating_matrix, \
         evaluate_predict_rating_matrix, topK, num_procs, exp_flag=0, sp_name=None, result_file=None):
         user_list = list(evaluate_index_dict.keys())
-        batch_size = len(user_list) / num_procs
+        batch_size = int(len(user_list) // num_procs)
 
         social_hr_list_0_4, social_ndcg_list_0_4 = [], []
         social_hr_list_4_8, social_ndcg_list_4_8 = [], []

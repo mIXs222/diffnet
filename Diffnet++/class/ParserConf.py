@@ -1,4 +1,5 @@
-import ConfigParser as cp
+from backports import configparser as cp
+# import ConfigParser as cp
 import re, os
 
 class ParserConf():

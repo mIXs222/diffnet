@@ -3,7 +3,9 @@ from collections import defaultdict
 import numpy as np
 from time import time
 import random
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+# import tensorflow as tf
 
 
 class DataModule():

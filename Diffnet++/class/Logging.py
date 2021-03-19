@@ -1,5 +1,6 @@
 import os, shutil
-import ConfigParser as cp
+from backports import configparser as cp
+# import ConfigParser as cp
 
 class Logging():
     def __init__(self, filename):
