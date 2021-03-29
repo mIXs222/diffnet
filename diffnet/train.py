@@ -23,9 +23,10 @@ def start(conf, data, model, evaluate):
 
     # start to prepare data for training and evaluating
     data.initializeRankingHandle()
-
+    # get four DataModule class object
     d_train, d_val, d_test, d_test_eva = data.train, data.val, data.test, data.test_eva
-
+    
+    # read postive (true) ratings and generate negative ratings
     print('System start to load data...')
     t0 = time()
     d_train.initializeRankingTrain()
@@ -36,7 +37,8 @@ def start(conf, data, model, evaluate):
     print('Data has been loaded successfully, cost:%.4fs' % (t1 - t0))
 
     # prepare model necessary data.
-    data_dict = d_train.prepareModelSupplement(model)
+    # data_dict constains the user-user link/user-item link and score for each link from averaging the numbers
+    data_dict = d_train.prepareModelSupplement(model) 
     model.inputSupply(data_dict)
     model.startConstructGraph()
 

@@ -20,11 +20,11 @@ class DataModule():
 ###########################################  Initalize Procedures ############################################
     def prepareModelSupplement(self, model):
         data_dict = {}
-        if 'CONSUMED_ITEMS_SPARSE_MATRIX' in model.supply_set:
+        if 'CONSUMED_ITEMS_SPARSE_MATRIX' in model.supply_set: # True
             self.generateConsumedItemsSparseMatrix()
             data_dict['CONSUMED_ITEMS_INDICES_INPUT'] = self.consumed_items_indices_list
             data_dict['CONSUMED_ITEMS_VALUES_INPUT'] = self.consumed_items_values_list
-        if 'SOCIAL_NEIGHBORS_SPARSE_MATRIX' in model.supply_set:
+        if 'SOCIAL_NEIGHBORS_SPARSE_MATRIX' in model.supply_set: # True
             self.readSocialNeighbors()
             self.generateSocialNeighborsSparseMatrix()
             data_dict['SOCIAL_NEIGHBORS_INDICES_INPUT'] = self.social_neighbors_indices_list
@@ -221,7 +221,7 @@ class DataModule():
             tmp = line.split('\t')
             u1, u2 = int(tmp[0]), int(tmp[1])
             social_neighbors[u1].add(u2)
-            if friends_flag == 1:
+            if friends_flag == 1:            # undirected or not
                 social_neighbors[u2].add(u1)
         self.social_neighbors = social_neighbors
 
@@ -229,7 +229,7 @@ class DataModule():
         Generate Social Neighbors Sparse Matrix Indices and Values
     '''
     def generateSocialNeighborsSparseMatrix(self):
-        social_neighbors = self.social_neighbors
+        social_neighbors = self.social_neighbors # social_neighbors: {user_i:{user_m, ..., user_n}} 
         social_neighbors_indices_list = []
         social_neighbors_values_list = []
         social_neighbors_dict = defaultdict(list)
@@ -241,14 +241,14 @@ class DataModule():
             for friend in social_neighbors_dict[user]:
                 social_neighbors_indices_list.append([user, friend])
                 social_neighbors_values_list.append(1.0/len(social_neighbors_dict[user]))
-        self.social_neighbors_indices_list = np.array(social_neighbors_indices_list).astype(np.int64)
-        self.social_neighbors_values_list = np.array(social_neighbors_values_list).astype(np.float32)
+        self.social_neighbors_indices_list = np.array(social_neighbors_indices_list).astype(np.int64) # a K*2 matrix
+        self.social_neighbors_values_list = np.array(social_neighbors_values_list).astype(np.float32) # a K*1 vector
     
     '''
         Generate Consumed Items Sparse Matrix Indices and Values
     '''
     def generateConsumedItemsSparseMatrix(self):
-        positive_data = self.positive_data  
+        positive_data = self.positive_data     # positive_data: {user_i:{item_m, ..., item_n}}
         consumed_items_indices_list = []
         consumed_items_values_list = []
         consumed_items_dict = defaultdict(list)
@@ -259,5 +259,5 @@ class DataModule():
             for i in consumed_items_dict[u]:
                 consumed_items_indices_list.append([u, i])
                 consumed_items_values_list.append(1.0/len(consumed_items_dict[u]))
-        self.consumed_items_indices_list = np.array(consumed_items_indices_list).astype(np.int64)
-        self.consumed_items_values_list = np.array(consumed_items_values_list).astype(np.float32)
+        self.consumed_items_indices_list = np.array(consumed_items_indices_list).astype(np.int64) # a K*2 matrix
+        self.consumed_items_values_list = np.array(consumed_items_values_list).astype(np.float32) # a K*1 vector
