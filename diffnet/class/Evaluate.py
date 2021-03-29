@@ -28,7 +28,7 @@ class Evaluate():
     def evaluateRankingPerformance(self, evaluate_index_dict, evaluate_real_rating_matrix, \
         evaluate_predict_rating_matrix, topK, num_procs, exp_flag=0, sp_name=None, result_file=None):
         user_list = list(evaluate_index_dict.keys())
-        batch_size = len(user_list) / num_procs
+        batch_size = len(user_list) // num_procs
 
         hr_list, ndcg_list = [], []
         index = 0
