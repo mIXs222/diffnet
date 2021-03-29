@@ -34,6 +34,9 @@ class Evaluate():
         index = 0
         for _ in range(num_procs):
             if index + batch_size < len(user_list):
+                print(len(user_list))
+                print(index)
+                print(batch_size)
                 batch_user_list = user_list[index:index+batch_size]
                 index = index + batch_size
             else:
