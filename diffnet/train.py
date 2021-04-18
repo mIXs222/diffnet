@@ -129,22 +129,26 @@ def start(conf, data, model, evaluate):
                     negative_predictions[u] = tmp_negative_predictions[index]
                     index = index + 1
             return negative_predictions
+        
+        if epoch == 1 or epoch % 10 == 0:
+            
+            tt2 = time()
+            
+            index_dict = d_test_eva.eva_index_dict
+            positive_predictions = getPositivePredictions()
+            negative_predictions = getNegativePredictions()
 
-        tt2 = time()
+            d_test_eva.index = 0 # !!!important, prepare for new batch
+            hr, ndcg = evaluate.evaluateRankingPerformance(\
+                index_dict, positive_predictions, negative_predictions, conf.topk, conf.num_procs)
+            tt3 = time()
 
-        index_dict = d_test_eva.eva_index_dict
-        positive_predictions = getPositivePredictions()
-        negative_predictions = getNegativePredictions()
+            # print log to console and log_file
+            log.record('Epoch:%d, compute loss cost:%.4fs, train loss:%.4f, val loss:%.4f, test loss:%.4f' % \
+                (epoch, (t2-t0), train_loss, val_loss, test_loss))
+            log.record('Evaluate cost:%.4fs, hr:%.4f, ndcg:%.4f' % ((tt3-tt2), hr, ndcg))
 
-        d_test_eva.index = 0 # !!!important, prepare for new batch
-        hr, ndcg = evaluate.evaluateRankingPerformance(\
-            index_dict, positive_predictions, negative_predictions, conf.topk, conf.num_procs)
-        tt3 = time()
-                
-        # print log to console and log_file
-        log.record('Epoch:%d, compute loss cost:%.4fs, train loss:%.4f, val loss:%.4f, test loss:%.4f' % \
-            (epoch, (t2-t0), train_loss, val_loss, test_loss))
-        log.record('Evaluate cost:%.4fs, hr:%.4f, ndcg:%.4f' % ((tt3-tt2), hr, ndcg))
-
-        ## reset train data pointer, and generate new negative data
-        d_train.generateTrainNegative()
+            ## reset train data pointer, and generate new negative data
+            d_train.generateTrainNegative()
+    
+    return positive_predictions

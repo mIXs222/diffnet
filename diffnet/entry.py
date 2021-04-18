@@ -30,7 +30,10 @@ def executeTrainModel(config_path, model_name):
     evaluate = Evaluate(conf)
 
     import train as starter
-    starter.start(conf, data, model, evaluate)
+    
+    pred = starter.start(conf, data, model, evaluate)
+    
+    return pred
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Welcome to the Experiment Platform Entry')
@@ -48,4 +51,4 @@ if __name__ == "__main__":
         os.environ['CUDA_VISIBLE_DEVICES'] = device_id
     config_path = os.path.join(os.getcwd(), 'conf/%s_%s.ini' % (data_name, model_name))
 
-    executeTrainModel(config_path, model_name)
+    pred = executeTrainModel(config_path, model_name)
