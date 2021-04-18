@@ -52,3 +52,6 @@ if __name__ == "__main__":
     config_path = os.path.join(os.getcwd(), 'conf/%s_%s.ini' % (data_name, model_name))
 
     pred = executeTrainModel(config_path, model_name)
+    
+    import pickle
+    pickle.dump(pred, open("pred.p", "wb" ) )
