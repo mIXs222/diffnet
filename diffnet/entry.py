@@ -54,4 +54,4 @@ if __name__ == "__main__":
     pred = executeTrainModel(config_path, model_name)
     
     import pickle
-    pickle.dump(pred, open("pred.p", "wb" ) )
+    pickle.dump(pred, open("pred.p", "wb" ))
