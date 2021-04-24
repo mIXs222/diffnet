@@ -31,9 +31,8 @@ def executeTrainModel(config_path, model_name):
 
     import train as starter
     
-    pred = starter.start(conf, data, model, evaluate)
-    
-    return pred
+    starter.start(conf, data, model, evaluate)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Welcome to the Experiment Platform Entry')
@@ -51,7 +50,4 @@ if __name__ == "__main__":
         os.environ['CUDA_VISIBLE_DEVICES'] = device_id
     config_path = os.path.join(os.getcwd(), 'conf/%s_%s.ini' % (data_name, model_name))
 
-    pred = executeTrainModel(config_path, model_name)
-    
-    import pickle
-    pickle.dump(pred, open("pred.p", "wb" ))
+    executeTrainModel(config_path, model_name)

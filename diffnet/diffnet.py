@@ -16,12 +16,6 @@ class diffnet():
             'CONSUMED_ITEMS_SPARSE_MATRIX'
         )
 
-    def startConstructGraph(self):
-        self.initializeNodes()
-        self.constructTrainGraph()
-        self.saveVariables()
-        self.defineMap()
-
     def inputSupply(self, data_dict):
         self.social_neighbors_indices_input = data_dict['SOCIAL_NEIGHBORS_INDICES_INPUT']
         self.social_neighbors_values_input = data_dict['SOCIAL_NEIGHBORS_VALUES_INPUT']
@@ -43,6 +37,12 @@ class diffnet():
             values = self.consumed_items_values_input,
             dense_shape=self.consumed_items_dense_shape
         )
+        
+    def startConstructGraph(self):
+        self.initializeNodes()
+        self.constructTrainGraph()
+        self.saveVariables()
+        self.defineMap()
 
     def convertDistribution(self, x):
         mean, var = tf.nn.moments(x, axes=[0, 1])

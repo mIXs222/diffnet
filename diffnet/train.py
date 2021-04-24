@@ -150,5 +150,3 @@ def start(conf, data, model, evaluate):
 
             ## reset train data pointer, and generate new negative data
             d_train.generateTrainNegative()
-    
-    return positive_predictions

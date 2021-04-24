@@ -57,11 +57,11 @@ class DataModule():
 
 ###########################################  Ranking ############################################
     def readData(self):
-        f = open(self.filename) ## May should be specific for different subtasks
+        f = open(self.filename) # e.g. yelp.train.rating
         total_user_list = set()
         hash_data = defaultdict(int)
         for _, line in enumerate(f):
-            arr = line.split("\t")
+            arr = line.split("\t") # user, item, rating(1)
             hash_data[(int(arr[0]), int(arr[1]))] = 1
             total_user_list.add(int(arr[0]))
         self.total_user_list = list(total_user_list)
@@ -70,12 +70,12 @@ class DataModule():
     def arrangePositiveData(self):
         positive_data = defaultdict(set)
         total_data = set()
-        hash_data = self.hash_data
+        hash_data = self.hash_data # connection between user and item
         for (u, i) in hash_data:
             total_data.add((u, i))
             positive_data[u].add(i)
-        self.positive_data = positive_data
-        self.total_data = len(total_data)
+        self.positive_data = positive_data # true connection as {user:[items]}
+        self.total_data = len(total_data) # total number of edges
     
     '''
         This function designes for the train/val/test negative generating section
@@ -89,11 +89,12 @@ class DataModule():
         for (u, i) in hash_data:
             total_data.add((u, i))
             for _ in range(num_negatives):
+                # sample an item j until it's not trully connected to user u
                 j = np.random.randint(num_items)
                 while (u, j) in hash_data:
                     j = np.random.randint(num_items)
                 negative_data[u].add(j)
-                total_data.add((u, j))
+                total_data.add((u, j)) # add the sample fake connection to the total data
         self.negative_data = negative_data
         self.terminal_flag = 1
         
@@ -213,7 +214,7 @@ class DataModule():
         self.eva_item_list = np.reshape(item_list, [-1, 1])
         return batch_user_list, terminal_flag
 
-##################################################### Supplement for Sparse Computation ############################################
+################################################ Supplement for Sparse Computation ##################################
     def readSocialNeighbors(self, friends_flag=1):
         social_neighbors = defaultdict(set)
         links_file = open(self.conf.links_filename)
@@ -234,13 +235,13 @@ class DataModule():
         social_neighbors_values_list = []
         social_neighbors_dict = defaultdict(list)
         for u in social_neighbors:
-            social_neighbors_dict[u] = sorted(social_neighbors[u])
+            social_neighbors_dict[u] = sorted(social_neighbors[u]) # sort the neighbors of user u
             
         user_list = sorted(list(social_neighbors.keys()))
         for user in user_list:
             for friend in social_neighbors_dict[user]:
                 social_neighbors_indices_list.append([user, friend])
-                social_neighbors_values_list.append(1.0/len(social_neighbors_dict[user]))
+                social_neighbors_values_list.append(1.0/len(social_neighbors_dict[user])) # 1/number of neighbors
         self.social_neighbors_indices_list = np.array(social_neighbors_indices_list).astype(np.int64) # a K*2 matrix
         self.social_neighbors_values_list = np.array(social_neighbors_values_list).astype(np.float32) # a K*1 vector
     
@@ -258,6 +259,6 @@ class DataModule():
         for u in user_list:
             for i in consumed_items_dict[u]:
                 consumed_items_indices_list.append([u, i])
-                consumed_items_values_list.append(1.0/len(consumed_items_dict[u]))
+                consumed_items_values_list.append(1.0/len(consumed_items_dict[u])) # 1/total number of visited items
         self.consumed_items_indices_list = np.array(consumed_items_indices_list).astype(np.int64) # a K*2 matrix
         self.consumed_items_values_list = np.array(consumed_items_values_list).astype(np.float32) # a K*1 vector
