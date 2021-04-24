@@ -132,7 +132,7 @@ class diffnet():
         # original opt loss in the paper
         self.opt_loss = tf.nn.l2_loss(self.labels_input - self.prediction)
         # new opt loss with InfoDis
-        self.opt_loss = tf.nn.l2_loss((self.labels_input - self.prediction)InfoDis[appropriate_idx])
+        #self.opt_loss = tf.nn.l2_loss((self.labels_input - self.prediction)InfoDis[appropriate_idx])
         
         self.opt = tf.train.AdamOptimizer(self.conf.learning_rate).minimize(self.opt_loss)
         self.init = tf.global_variables_initializer()
