@@ -123,7 +123,10 @@ class diffnet():
         
         self.prediction = tf.sigmoid(tf.reduce_sum(predict_vector, 1, keepdims=True))
         #self.prediction = self.predict_rating_layer(tf.concat([latest_user_latent, latest_item_latent], 1))
-
+        
+        print(self.labels_input)
+        print(self.prediction)
+        
         self.loss = tf.nn.l2_loss(self.labels_input - self.prediction)
 
         self.opt_loss = tf.nn.l2_loss(self.labels_input - self.prediction)
