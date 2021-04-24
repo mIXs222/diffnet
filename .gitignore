@@ -102,3 +102,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+diffnet/data/yelp/yelp_edge_score.h5
