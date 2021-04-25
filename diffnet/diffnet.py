@@ -82,6 +82,8 @@ class diffnet():
             self.conf.dimension, activation=tf.nn.sigmoid, name='item_fusion_layer')
         self.user_fusion_layer = tf.layers.Dense(\
             self.conf.dimension, activation=tf.nn.sigmoid, name='user_fusion_layer')
+        
+        
 
     def constructTrainGraph(self):
         # handle review information, map the origin review into the new space and 
@@ -132,7 +134,7 @@ class diffnet():
         # original opt loss in the paper
         self.opt_loss = tf.nn.l2_loss(self.labels_input - self.prediction)
         # new opt loss with InfoDis
-        #self.opt_loss = tf.nn.l2_loss((self.labels_input - self.prediction)InfoDis[appropriate_idx])
+        #self.opt_loss = tf.nn.l2_loss((self.labels_input - self.prediction)*InfoDis)
         
         self.opt = tf.train.AdamOptimizer(self.conf.learning_rate).minimize(self.opt_loss)
         self.init = tf.global_variables_initializer()
