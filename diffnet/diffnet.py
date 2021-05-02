@@ -168,18 +168,21 @@ class diffnet():
             self.user_input: 'USER_LIST', 
             self.item_input: 'ITEM_LIST', 
             self.labels_input: 'LABEL_LIST'
+            self.edgescore_input: 'EDGE_SCORE'
         }
 
         map_dict['test'] = {
             self.user_input: 'USER_LIST', 
             self.item_input: 'ITEM_LIST', 
             self.labels_input: 'LABEL_LIST'
+            self.edgescore_input: 'EDGE_SCORE'
         }
 
         map_dict['eva'] = {
             self.user_input: 'EVA_USER_LIST', 
             self.item_input: 'EVA_ITEM_LIST'
         }
+        
 
         map_dict['out'] = {
             'train': self.loss,
