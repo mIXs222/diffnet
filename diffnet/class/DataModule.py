@@ -20,8 +20,8 @@ class DataModule():
         # added by JWU
         self.item_idx_encode = pickle.load(open(os.path.join(os.getcwd(), 'data/%s'%self.conf.data_name, 'item_idx_encode.p'), 'rb'))
         self.full_eigenvector = pickle.load(open(os.path.join(os.getcwd(), 'data/%s'%self.conf.data_name, 'eigen_vector.p'), 'rb'))
-        self.edge_score_min = (np.abs(self.full_eigenvector).min())**2
-        self.edge_score_max = (np.abs(self.full_eigenvector).max())**2
+        self.edge_score_min = ((self.full_eigenvector).min())**2
+        self.edge_score_max = ((self.full_eigenvector).max())**2
 
 ###########################################  Initalize Procedures ############################################
     def prepareModelSupplement(self, model):
