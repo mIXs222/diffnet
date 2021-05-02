@@ -197,17 +197,30 @@ class DataModule():
         user_list = []
         item_list = []
         labels_list = []
+        # add by JWU
+        edge_score = []
         for u in total_user_list:
             user_list.extend([u] * len(positive_data[u]))
             item_list.extend(positive_data[u])
             labels_list.extend([1] * len(positive_data[u]))
+            # add by JWU
+            user_item_edge_score = self.full_eigenvector[u]*self.full_eigenvector[list(positive_data[u])]
+            user_item_edge_score = (user_item_edge_score- self.edge_score_min)/(self.edge_score_max - self.edge_score_min)
+            edge_score.extend(user_item_edge_score)
+            
             user_list.extend([u] * len(negative_data[u]))
             item_list.extend(negative_data[u])
             labels_list.extend([0] * len(negative_data[u]))
+            # add by JWU
+            user_item_edge_score = self.full_eigenvector[u]*self.full_eigenvector[list(negative_data[u])]
+            user_item_edge_score = (user_item_edge_score- self.edge_score_min)/(self.edge_score_max - self.edge_score_min)
+            edge_score.extend(user_item_edge_score)
         
         self.user_list = np.reshape(user_list, [-1, 1])
         self.item_list = np.reshape(item_list, [-1, 1])
         self.labels_list = np.reshape(labels_list, [-1, 1])
+        # add by JWU
+        self.edge_score = np.reshape(edge_score, [-1,1])
 
     '''
         This function designs for the rating evaluate section, generate negative batch
