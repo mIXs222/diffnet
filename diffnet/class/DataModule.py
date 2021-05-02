@@ -8,7 +8,7 @@ from collections import defaultdict
 import numpy as np
 from time import time
 import random
-import pickle
+import pickle, os
 
 class DataModule():
     def __init__(self, conf, filename):
