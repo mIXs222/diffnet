@@ -43,7 +43,8 @@ class diffnet():
         self.constructTrainGraph()
         self.saveVariables()
         self.defineMap()
-
+    
+    ####### Helper funcitons for the main functions
     def convertDistribution(self, x):
         mean, var = tf.nn.moments(x, axes=[0, 1])
         y = (x - mean) * 0.2 / tf.sqrt(var)
@@ -60,11 +61,14 @@ class diffnet():
             self.consumed_items_sparse_matrix, current_item_embedding
         )
         return user_embedding_from_consumed_items
-
+    ####### 
+    
     def initializeNodes(self):
         self.item_input = tf.placeholder("int32", [None, 1]) # Get item embedding from the core_item_input
         self.user_input = tf.placeholder("int32", [None, 1]) # Get user embedding from the core_user_input
         self.labels_input = tf.placeholder("float32", [None, 1])
+        # add by JWU
+        self.edgescore_input = tf.placeholder("float32", [None, 1])
 
         self.user_embedding = tf.Variable(
             tf.random_normal([self.conf.num_users, self.conf.dimension], stddev=0.01), name='user_embedding')
@@ -132,9 +136,9 @@ class diffnet():
         self.loss = tf.nn.l2_loss(self.labels_input - self.prediction)
         
         # original opt loss in the paper
-        self.opt_loss = tf.nn.l2_loss(self.labels_input - self.prediction)
+        # self.opt_loss = tf.nn.l2_loss(self.labels_input - self.prediction)
         # new opt loss with InfoDis
-        #self.opt_loss = tf.nn.l2_loss((self.labels_input - self.prediction)*InfoDis)
+        self.opt_loss = tf.nn.l2_loss(tf.math.multiply((self.labels_input - self.prediction), self.edgescore_input)
         
         self.opt = tf.train.AdamOptimizer(self.conf.learning_rate).minimize(self.opt_loss)
         self.init = tf.global_variables_initializer()
@@ -156,7 +160,8 @@ class diffnet():
         map_dict['train'] = {
             self.user_input: 'USER_LIST', 
             self.item_input: 'ITEM_LIST', 
-            self.labels_input: 'LABEL_LIST'
+            self.labels_input: 'LABEL_LIST',
+            self.edgescore_input: 'EDGE_SCORE'
         }
         
         map_dict['val'] = {
