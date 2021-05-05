@@ -101,34 +101,28 @@ class diffnet():
         second_item_review_vector_matrix = self.convertDistribution(self.item_reduce_dim_vector_matrix)
 
         # compute item embedding
-        #self.fusion_item_embedding = self.item_fusion_layer(\
-        #   tf.concat([self.item_embedding, second_item_review_vector_matrix], 1))
         self.final_item_embedding = self.fusion_item_embedding \
                              = self.item_embedding + second_item_review_vector_matrix
-        #self.final_item_embedding = self.fusion_item_embedding = second_item_review_vector_matrix
 
         # compute user embedding
         user_embedding_from_consumed_items = self.generateUserEmebddingFromConsumedItems(self.final_item_embedding)
 
-        #self.fusion_user_embedding = self.user_fusion_layer(\
-        #    tf.concat([self.user_embedding, second_user_review_vector_matrix], 1))
         self.fusion_user_embedding = self.user_embedding + second_user_review_vector_matrix
-        first_gcn_user_embedding = self.generateUserEmbeddingFromSocialNeighbors(self.fusion_user_embedding)
-        second_gcn_user_embedding = self.generateUserEmbeddingFromSocialNeighbors(first_gcn_user_embedding)
-        
+        self.first_gcn_user_embedding = self.generateUserEmbeddingFromSocialNeighbors(self.fusion_user_embedding)
+        self.second_gcn_user_embedding = self.generateUserEmbeddingFromSocialNeighbors(self.first_gcn_user_embedding)
         # ORIGINAL OPERATION OF diffnet
         #self.final_user_embedding = second_gcn_user_embedding + user_embedding_from_consumed_items
-        
-        # FOLLOWING OPERATION IS USED TO TACKLE THE GRAPH OVERSMOOTHING ISSUE, IF YOU WANT TO KNOW MORE DETAILS, PLEASE REFER TO https://github.com/newlei/LR-GCCF
+        # FOLLOWING OPERATION IS USED TO TACKLE THE GRAPH OVERSMOOTHING ISSUE (see https://github.com/newlei/LR-GCCF)
         self.final_user_embedding = first_gcn_user_embedding + second_gcn_user_embedding + user_embedding_from_consumed_items
+        
+        
+        
+        
         
         latest_user_latent = tf.gather_nd(self.final_user_embedding, self.user_input)
         latest_item_latent = tf.gather_nd(self.final_item_embedding, self.item_input)
         
         predict_vector = tf.multiply(latest_user_latent, latest_item_latent)
-        
-        tf.print("output shape blablabla")
-        tf.print(predict_vector.shape)
         
         self.prediction = tf.sigmoid(tf.reduce_sum(predict_vector, 1, keepdims=True))
         #self.prediction = self.predict_rating_layer(tf.concat([latest_user_latent, latest_item_latent], 1))
