@@ -44,15 +44,16 @@ class Evaluate():
             ndcg_list.extend(tmp_ndcg_list)
         return np.mean(hr_list), np.mean(ndcg_list)
 
-    def getHrNdcgProc(self, 
-        evaluate_index_dict, 
-        evaluate_real_rating_matrix,
-        evaluate_predict_rating_matrix, 
-        topK, 
-        user_list):
+    def getHrNdcgProc(self, evaluate_index_dict, evaluate_real_rating_matrix, evaluate_predict_rating_matrix, \
+                      topK, user_list):
 
         tmp_hr_list, tmp_ndcg_list = [], []
-
+        
+        # sample testcase
+        # evaluate_index_dict = {2:[0,1]}
+        # evaluate_real_rating_matrix (positive prediction) = [[0.5], [0.5]]
+        # evaluate_predict_rating_matrix (negative prediction) = {2:[0.5673024, 0.5, 0.5673024, 0.5673024, 0.5, 0.5673024, 0.5673024, 0.48266914, 0.5673024, 0.48266914]}
+        
         for u in user_list:
             real_item_index_list = evaluate_index_dict[u]
             real_item_rating_list = list(np.concatenate(evaluate_real_rating_matrix[real_item_index_list]))
