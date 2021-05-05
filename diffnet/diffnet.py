@@ -167,7 +167,7 @@ class diffnet():
         map_dict['val'] = {
             self.user_input: 'USER_LIST', 
             self.item_input: 'ITEM_LIST', 
-            self.labels_input: 'LABEL_LIST'
+            self.labels_input: 'LABEL_LIST',
             self.edgescore_input: 'EDGE_SCORE'
         }
 
