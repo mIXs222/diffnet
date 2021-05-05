@@ -105,7 +105,7 @@ class diffnet():
                              = self.item_embedding + second_item_review_vector_matrix
 
         # compute user embedding
-        user_embedding_from_consumed_items = self.generateUserEmebddingFromConsumedItems(self.final_item_embedding)
+        self.user_embedding_from_consumed_items = self.generateUserEmebddingFromConsumedItems(self.final_item_embedding)
 
         self.fusion_user_embedding = self.user_embedding + second_user_review_vector_matrix
         self.first_gcn_user_embedding = self.generateUserEmbeddingFromSocialNeighbors(self.fusion_user_embedding)
@@ -113,7 +113,7 @@ class diffnet():
         # ORIGINAL OPERATION OF diffnet
         #self.final_user_embedding = second_gcn_user_embedding + user_embedding_from_consumed_items
         # FOLLOWING OPERATION IS USED TO TACKLE THE GRAPH OVERSMOOTHING ISSUE (see https://github.com/newlei/LR-GCCF)
-        self.final_user_embedding = self.first_gcn_user_embedding + self.second_gcn_user_embedding + user_embedding_from_consumed_items
+        self.final_user_embedding = self.first_gcn_user_embedding + self.second_gcn_user_embedding + self.user_embedding_from_consumed_items
         
         
         
