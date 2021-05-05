@@ -293,7 +293,7 @@ class DataModule():
         user_list = sorted(list(positive_data.keys()))
         for u in user_list:
             for i in consumed_items_dict[u]:
-                consumed_items_indices_list.append([u, i])
+                consumed_items_indices_list.append([u, i-self.conf.num_users]) # shift the index of item back in the sparse matrix
                 consumed_items_values_list.append(1.0/len(consumed_items_dict[u])) # 1/total number of visited items
         self.consumed_items_indices_list = np.array(consumed_items_indices_list).astype(np.int64) # a K*2 matrix
         self.consumed_items_values_list = np.array(consumed_items_values_list).astype(np.float32) # a K*1 vector

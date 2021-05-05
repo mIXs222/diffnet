@@ -61,7 +61,7 @@ class diffnet():
             self.consumed_items_sparse_matrix, current_item_embedding
         )
         return user_embedding_from_consumed_items
-    ####### 
+    ##################################################
     
     def initializeNodes(self):
         self.item_input = tf.placeholder("int32", [None, 1]) # Get item embedding from the core_item_input
