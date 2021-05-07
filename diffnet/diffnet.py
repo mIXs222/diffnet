@@ -124,11 +124,11 @@ class diffnet():
         #self.prediction = self.predict_rating_layer(tf.concat([latest_user_latent, latest_item_latent], 1))
         
         # original opt loss in the paper
-        # self.opt_loss = tf.nn.l2_loss(self.labels_input - self.prediction)
+        self.opt_loss = tf.nn.l2_loss(self.labels_input - self.prediction)
         # new opt loss with InfoDis
         #self.loss_penalty = tf.math.divide(1.0+tf.math.multiply(tf.math.exp(0.1), self.edgescore_input), 1.0+tf.math.exp(0.1))
-        self.loss_penalty = 1.0
-        self.loss = tf.nn.l2_loss(tf.math.multiply((self.labels_input-self.prediction), self.loss_penalty))
+        #self.loss_penalty = 1.0
+        #self.loss = tf.nn.l2_loss(tf.math.multiply((self.labels_input-self.prediction), self.loss_penalty))
         
         self.opt_loss = self.loss
         self.opt = tf.train.AdamOptimizer(self.conf.learning_rate).minimize(self.opt_loss)
