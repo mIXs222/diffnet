@@ -124,7 +124,7 @@ class diffnet():
         #self.prediction = self.predict_rating_layer(tf.concat([latest_user_latent, latest_item_latent], 1))
         
         # original opt loss in the paper
-        self.opt_loss = tf.nn.l2_loss(self.labels_input - self.prediction)
+        self.loss = tf.nn.l2_loss(self.labels_input - self.prediction)
         # new opt loss with InfoDis
         #self.loss_penalty = tf.math.divide(1.0+tf.math.multiply(tf.math.exp(0.1), self.edgescore_input), 1.0+tf.math.exp(0.1))
         #self.loss_penalty = 1.0
