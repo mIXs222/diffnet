@@ -115,10 +115,6 @@ class diffnet():
         # FOLLOWING OPERATION IS USED TO TACKLE THE GRAPH OVERSMOOTHING ISSUE (see https://github.com/newlei/LR-GCCF)
         self.final_user_embedding = self.first_gcn_user_embedding + self.second_gcn_user_embedding + self.user_embedding_from_consumed_items
         
-        
-        
-        
-        
         latest_user_latent = tf.gather_nd(self.final_user_embedding, self.user_input)
         latest_item_latent = tf.gather_nd(self.final_item_embedding, self.item_input)
         
@@ -127,13 +123,13 @@ class diffnet():
         self.prediction = tf.sigmoid(tf.reduce_sum(predict_vector, 1, keepdims=True))
         #self.prediction = self.predict_rating_layer(tf.concat([latest_user_latent, latest_item_latent], 1))
         
-        self.loss = tf.nn.l2_loss(tf.math.multiply((self.labels_input - self.prediction), self.edgescore_input))
-        
         # original opt loss in the paper
         # self.opt_loss = tf.nn.l2_loss(self.labels_input - self.prediction)
         # new opt loss with InfoDis
-        self.opt_loss = self.loss
+        self.loss_penalty = tf.math.divide(1+tf.math.multiply(tf.math.exp(5), self.edgescore_input), 1+tf.math.exp(5))
+        self.loss = tf.math.multiply(tf.nn.sigmoid_cross_entropy(self.labels_input, self.prediction), self.loss_penalty)
         
+        self.opt_loss = self.loss
         self.opt = tf.train.AdamOptimizer(self.conf.learning_rate).minimize(self.opt_loss)
         self.init = tf.global_variables_initializer()
 
