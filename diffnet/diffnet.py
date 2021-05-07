@@ -126,7 +126,7 @@ class diffnet():
         # original opt loss in the paper
         # self.opt_loss = tf.nn.l2_loss(self.labels_input - self.prediction)
         # new opt loss with InfoDis
-        self.loss_penalty = tf.math.divide(1.0+tf.math.multiply(tf.math.exp(5.0), self.edgescore_input), 1.0+tf.math.exp(5.0))
+        self.loss_penalty = tf.math.divide(1.0+tf.math.multiply(tf.math.exp(0.1), self.edgescore_input), 1.0+tf.math.exp(0.1))
         #self.loss_penalty = 1.0
         self.loss = tf.nn.l2_loss(tf.math.multiply((self.labels_input-self.prediction), self.loss_penalty))
         
